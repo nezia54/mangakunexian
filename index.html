@@ -1,109 +1,1029 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MangaVerse — Baca Manga Online</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MangaKu — Baca Manga Online</title>
 <style>
-  .hero { margin: 32px 5% 0; border-radius: 24px; padding: 48px 5%;
-    background: linear-gradient(120deg, rgba(23,23,36,0.9), rgba(23,23,36,0.5)), var(--gradient);
-    background-blend-mode: overlay; position: relative; overflow: hidden;
-    display: grid; grid-template-columns: 1.4fr 1fr; gap: 40px; align-items: center;
-    border: 1px solid var(--border); }
-  .hero::before { content: ''; position: absolute; inset: 0;
-    background: radial-gradient(circle at 80% 50%, rgba(236,72,153,0.35), transparent 50%),
-                radial-gradient(circle at 20% 80%, rgba(99,102,241,0.3), transparent 50%);
-    pointer-events: none; }
-  .hero-content { position: relative; z-index: 2; }
-  .badge { display: inline-flex; align-items: center; gap: 6px;
-    background: rgba(168,85,247,0.15); border: 1px solid rgba(168,85,247,0.4);
-    color: #d8b4fe; font-size: 12px; font-weight: 700;
-    padding: 6px 14px; border-radius: 999px; margin-bottom: 18px; letter-spacing: 0.5px; }
-  .badge .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
-    box-shadow: 0 0 10px var(--accent); animation: pulse 1.6s infinite; }
-  @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.4); } }
-  .hero h1 { font-size: clamp(28px, 4vw, 46px); line-height: 1.15;
-    letter-spacing: -1px; margin-bottom: 16px; font-weight: 800; }
-  .hero h1 em { font-style: normal; background: var(--gradient);
-    -webkit-background-clip: text; background-clip: text; color: transparent; }
-  .hero p { color: var(--text-dim); font-size: 15px; line-height: 1.7;
-    max-width: 480px; margin-bottom: 28px; }
-  .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; }
-  .hero-visual { position: relative; z-index: 2; display: flex; justify-content: center; gap: 16px; }
-  .hero-cover { width: 130px; height: 190px; border-radius: 14px;
-    background-size: cover; background-position: center;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-    border: 2px solid rgba(255,255,255,0.1);
-    transition: transform .4s cubic-bezier(.2,.8,.2,1); }
-  .hero-cover:nth-child(1) { transform: rotate(-8deg) translateY(10px); }
-  .hero-cover:nth-child(2) { transform: scale(1.1); z-index: 2; }
-  .hero-cover:nth-child(3) { transform: rotate(8deg) translateY(10px); }
-  .hero-cover:hover { transform: translateY(-8px) scale(1.08); z-index: 5; }
-  @media (max-width: 900px) { .hero { grid-template-columns: 1fr; padding: 32px 6%; } .hero-visual { display: none; } }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  :root{
+    --bg:#0a0c11; --bg2:#0e1119; --panel:#141821; --panel-2:#1b212c; --line:#242c3a;
+    --text:#e8ebf2; --muted:#8b93a7; --accent:#7c5cff; --accent-2:#ff4d8d;
+    --radius:14px; --shadow:0 18px 46px rgba(0,0,0,.55); --header:rgba(10,12,17,.82);
+  }
+  [data-theme="light"]{
+    --bg:#f2f4f9; --bg2:#e9ecf3; --panel:#ffffff; --panel-2:#f4f6fb; --line:#dfe3ec;
+    --text:#131722; --muted:#667085; --shadow:0 14px 34px rgba(20,30,60,.14);
+    --header:rgba(242,244,249,.85);
+  }
+  html{scroll-behavior:smooth}
+  body{
+    background:radial-gradient(1200px 600px at 80% -10%,rgba(124,92,255,.12),transparent 60%),var(--bg);
+    color:var(--text);font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+    min-height:100vh;-webkit-font-smoothing:antialiased;transition:background .25s,color .25s;
+    padding-bottom:env(safe-area-inset-bottom);
+  }
+  a{color:inherit;text-decoration:none}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  img{max-width:100%}
+
+  /* ---------- TOPBAR ---------- */
+  .topbar{
+    position:sticky;top:0;z-index:80;display:flex;align-items:center;gap:14px;
+    padding:12px 24px;background:var(--header);backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--line);transition:background .25s,border-color .25s;
+  }
+  .brand{
+    font-weight:800;font-size:21px;letter-spacing:-.6px;cursor:pointer;white-space:nowrap;
+    background:linear-gradient(90deg,var(--accent),var(--accent-2));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .search{flex:1;max-width:520px;position:relative}
+  .search input{
+    width:100%;padding:10px 14px 10px 38px;border-radius:10px;border:1px solid var(--line);
+    background:var(--panel);color:var(--text);outline:none;font-size:14px;transition:.2s;
+  }
+  .search input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(124,92,255,.15)}
+  .search .icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);opacity:.45;font-size:14px}
+  .topnav{margin-left:auto;display:flex;gap:4px;font-size:13.5px;color:var(--muted);align-items:center}
+  .topnav button{padding:8px 12px;border-radius:9px;transition:.2s;display:flex;align-items:center;gap:7px;font-weight:500}
+  .topnav button:hover{color:var(--text);background:var(--panel)}
+  .topnav button.active{color:var(--text);background:var(--panel-2)}
+  .topnav .iconbtn{width:38px;height:38px;padding:0;justify-content:center;background:var(--panel);border:1px solid var(--line);font-size:16px}
+  @media(max-width:760px){
+    .topbar{padding:10px 14px;gap:10px}
+    .topnav .label{display:none}
+    .topnav button{padding:8px 10px}
+  }
+
+  /* ---------- BOTTOM NAV (mobile) ---------- */
+  .bottomnav{
+    display:none;position:fixed;bottom:0;left:0;right:0;z-index:80;
+    background:var(--header);backdrop-filter:blur(14px);border-top:1px solid var(--line);
+    padding:6px 8px calc(6px + env(safe-area-inset-bottom));
+  }
+  .bottomnav .bn{display:flex;justify-content:space-around}
+  .bottomnav button{
+    flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+    padding:8px 4px;border-radius:10px;font-size:10.5px;color:var(--muted);font-weight:600;
+  }
+  .bottomnav button .bi{font-size:19px;line-height:1}
+  .bottomnav button.active{color:var(--accent)}
+  @media(max-width:760px){
+    .bottomnav{display:block}
+    body{padding-bottom:74px}
+  }
+
+  /* ---------- LAYOUT ---------- */
+  main{max-width:1280px;margin:0 auto;padding:28px 24px 80px}
+  @media(max-width:600px){main{padding:18px 14px 40px}}
+  .section-title{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:700;margin:0 0 16px}
+  .section-title::before{content:'';width:4px;height:18px;border-radius:2px;background:linear-gradient(180deg,var(--accent),var(--accent-2))}
+  .section-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:16px}
+  .section-head .section-title{margin:0}
+
+  /* ---------- HERO / CONTINUE ---------- */
+  .continue{
+    display:flex;gap:18px;align-items:center;padding:16px;border-radius:var(--radius);
+    background:linear-gradient(120deg,rgba(124,92,255,.18),rgba(255,77,141,.10));
+    border:1px solid rgba(124,92,255,.28);margin-bottom:32px;
+  }
+  .continue img{width:64px;height:88px;object-fit:cover;border-radius:9px;flex-shrink:0}
+  .continue .ci{flex:1;min-width:0}
+  .continue h3{font-size:15px;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .continue p{font-size:13px;color:var(--muted);margin-bottom:10px}
+
+  /* ---------- BUTTONS ---------- */
+  .btn{
+    display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:9px;font-size:13.5px;
+    font-weight:600;background:linear-gradient(135deg,var(--accent),#9d5cff);color:#fff;
+    transition:.2s;white-space:nowrap;
+  }
+  .btn:hover{filter:brightness(1.12);transform:translateY(-1px)}
+  .btn.ghost{background:var(--panel-2);border:1px solid var(--line);color:var(--text)}
+  .btn.ghost:hover{background:var(--line)}
+  .btn.danger{background:linear-gradient(135deg,#ef4444,#f97316)}
+  .btn.full{width:100%;justify-content:center;padding:12px}
+  .btn:disabled{opacity:.55;cursor:not-allowed;transform:none!important;filter:none!important}
+
+  /* ---------- CHIPS ---------- */
+  .chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:26px;scrollbar-width:none}
+  .chips::-webkit-scrollbar{display:none}
+  .chip{
+    padding:7px 15px;border-radius:999px;background:var(--panel);border:1px solid var(--line);
+    color:var(--muted);font-size:13px;font-weight:500;white-space:nowrap;transition:.2s;
+  }
+  .chip:hover{color:var(--text);border-color:#38425a}
+  .chip.active{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;border-color:transparent}
+
+  /* ---------- GRID & CARD ---------- */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(156px,1fr));gap:20px}
+  @media(max-width:600px){.grid{grid-template-columns:repeat(auto-fill,minmax(126px,1fr));gap:14px}}
+  .card{
+    border-radius:var(--radius);overflow:hidden;background:var(--panel);border:1px solid var(--line);
+    cursor:pointer;transition:transform .25s cubic-bezier(.2,.7,.3,1),border-color .25s,box-shadow .25s;
+    position:relative;
+  }
+  .card:hover{transform:translateY(-5px);border-color:rgba(124,92,255,.6);box-shadow:0 14px 30px rgba(124,92,255,.20)}
+  .card .thumb{position:relative;aspect-ratio:5/7;overflow:hidden;background:var(--bg2)}
+  .card .thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}
+  .card:hover .thumb img{transform:scale(1.06)}
+  .badge{
+    position:absolute;top:8px;left:8px;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700;
+    background:rgba(10,12,17,.78);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.12);color:#fff;
+  }
+  .badge.rating{left:auto;right:8px;color:#ffd66b}
+  .fav-btn{
+    position:absolute;bottom:8px;right:8px;width:32px;height:32px;border-radius:50%;
+    display:grid;place-items:center;background:rgba(10,12,17,.72);backdrop-filter:blur(6px);
+    border:1px solid rgba(255,255,255,.16);font-size:15px;transition:.2s;z-index:2;
+  }
+  .fav-btn:hover{background:rgba(124,92,255,.85);transform:scale(1.1)}
+  .fav-btn.on{background:linear-gradient(135deg,var(--accent),var(--accent-2));border-color:transparent}
+  .card .info{padding:11px 12px 13px}
+  .card .info h3{font-size:13.5px;font-weight:600;line-height:1.35;margin-bottom:6px;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .card .meta{font-size:11.5px;color:var(--muted);display:flex;justify-content:space-between;gap:6px}
+
+  .empty{text-align:center;padding:70px 20px;color:var(--muted)}
+  .empty .big{font-size:44px;margin-bottom:12px;opacity:.6}
+  .empty h3{color:var(--text);font-size:16px;margin-bottom:8px}
+
+  /* ---------- DETAIL ---------- */
+  .detail{display:grid;grid-template-columns:262px 1fr;gap:40px;align-items:start}
+  @media(max-width:820px){.detail{grid-template-columns:1fr;gap:24px}}
+  .detail .poster{width:100%;border-radius:var(--radius);display:block;box-shadow:var(--shadow)}
+  .detail h1{font-size:30px;font-weight:800;letter-spacing:-.8px;line-height:1.2;margin-bottom:12px}
+  @media(max-width:600px){.detail h1{font-size:23px}}
+  .tagrow{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+  .tag{padding:5px 12px;border-radius:8px;background:var(--panel-2);border:1px solid var(--line);font-size:12px;color:var(--muted)}
+  .tag.status{color:#22c55e;border-color:rgba(34,197,94,.3);background:rgba(34,197,94,.08)}
+  .stats{display:flex;flex-wrap:wrap;gap:26px;padding:16px 0;margin-bottom:18px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .stats div{font-size:12px;color:var(--muted)}
+  .stats strong{display:block;font-size:19px;color:var(--text);font-weight:700;margin-top:3px}
+  .synopsis{font-size:14.2px;line-height:1.8;color:var(--muted);margin-bottom:22px;max-width:760px}
+  .detail-actions{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px}
+  .chapters{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px;
+    max-height:340px;overflow-y:auto;padding-right:6px}
+  .chapters::-webkit-scrollbar{width:7px}
+  .chapters::-webkit-scrollbar-thumb{background:var(--line);border-radius:9px}
+  .chapters button{
+    padding:10px 6px;border-radius:9px;background:var(--panel);border:1px solid var(--line);
+    font-size:12.5px;font-weight:600;color:var(--muted);transition:.18s;position:relative;
+  }
+  .chapters button:hover{background:var(--panel-2);color:var(--text);border-color:var(--accent);transform:translateY(-2px)}
+  .chapters button.read::after{
+    content:'';position:absolute;top:5px;right:5px;width:6px;height:6px;border-radius:50%;
+    background:var(--accent);
+  }
+
+  /* ---------- READER ---------- */
+  .reader-bar{
+    position:sticky;top:0;z-index:70;display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+    padding:10px 16px;background:var(--header);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);
+  }
+  .reader-bar .rt{flex:1;min-width:0}
+  .reader-bar .rt h2{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .reader-bar .rt p{font-size:11.5px;color:var(--muted);margin-top:2px}
+  .reader-bar select{
+    padding:8px 10px;border-radius:8px;background:var(--panel);border:1px solid var(--line);
+    color:var(--text);font-size:12.5px;outline:none;cursor:pointer;max-width:170px;
+  }
+  .iconbtn{
+    width:36px;height:36px;border-radius:9px;display:grid;place-items:center;background:var(--panel);
+    border:1px solid var(--line);font-size:15px;transition:.2s;flex-shrink:0;
+  }
+  .iconbtn:hover{background:var(--panel-2);border-color:var(--accent)}
+  .iconbtn:disabled{opacity:.32;cursor:not-allowed}
+  .progress{height:3px;background:var(--line);position:sticky;top:57px;z-index:69}
+  .progress i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));transition:width .25s}
+
+  .reader-wrap{max-width:880px;margin:0 auto;padding:22px 14px 130px}
+  .page-img{width:100%;display:block;border-radius:10px;background:#fff;box-shadow:var(--shadow)}
+  .page-hint{text-align:center;color:var(--muted);font-size:12px;margin-top:14px}
+
+  .navzone{position:fixed;top:60px;bottom:0;width:22%;z-index:40;cursor:pointer;display:grid;place-items:center}
+  .navzone.left{left:0}.navzone.right{right:0}
+  .navzone span{
+    opacity:0;transition:.25s;font-size:26px;color:var(--text);background:var(--panel);
+    width:52px;height:52px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line);
+  }
+  .navzone:hover span{opacity:1}
+  @media(max-width:820px){.navzone{display:none}}
+
+  .chapter-end{text-align:center;padding:44px 20px;margin-top:30px;background:var(--panel);
+    border:1px solid var(--line);border-radius:var(--radius)}
+  .chapter-end h3{font-size:17px;margin-bottom:8px}
+  .chapter-end p{color:var(--muted);font-size:13px;margin-bottom:20px}
+  .chapter-end .row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+
+  /* ---------- AUTH ---------- */
+  .auth-wrap{max-width:420px;margin:20px auto;padding:32px 28px;background:var(--panel);
+    border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}
+  .auth-wrap h1{font-size:24px;font-weight:800;margin-bottom:6px;letter-spacing:-.5px}
+  .auth-wrap .sub{color:var(--muted);font-size:13.5px;margin-bottom:26px}
+  .field{margin-bottom:16px}
+  .field label{display:block;font-size:12.5px;font-weight:600;color:var(--muted);margin-bottom:7px}
+  .field input{
+    width:100%;padding:11px 14px;border-radius:10px;border:1px solid var(--line);
+    background:var(--bg2);color:var(--text);outline:none;font-size:14px;transition:.2s;
+  }
+  .field input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(124,92,255,.15)}
+  .auth-switch{text-align:center;margin-top:18px;font-size:13px;color:var(--muted)}
+  .auth-switch button{color:var(--accent);font-weight:600}
+  .auth-error{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#f87171;
+    padding:10px 14px;border-radius:9px;font-size:13px;margin-bottom:16px;display:none}
+  .auth-error.show{display:block}
+
+  /* ---------- PROFILE ---------- */
+  .profile-head{display:flex;align-items:center;gap:20px;padding:24px;background:var(--panel);
+    border:1px solid var(--line);border-radius:var(--radius);margin-bottom:26px}
+  .avatar{width:72px;height:72px;border-radius:50%;display:grid;place-items:center;font-size:30px;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;font-weight:800;flex-shrink:0}
+  .profile-head h2{font-size:20px;font-weight:700;margin-bottom:4px}
+  .profile-head p{color:var(--muted);font-size:13px}
+
+  /* ---------- TOAST ---------- */
+  .toast{
+    position:fixed;bottom:24px;left:50%;transform:translate(-50%,120px);z-index:200;
+    padding:12px 22px;border-radius:11px;background:var(--panel);border:1px solid var(--line);
+    box-shadow:var(--shadow);font-size:13.5px;font-weight:500;transition:transform .3s cubic-bezier(.2,.8,.3,1);
+    display:flex;align-items:center;gap:9px;max-width:90vw;
+  }
+  .toast.show{transform:translate(-50%,0)}
+  @media(max-width:760px){.toast{bottom:86px}}
+
+  footer{border-top:1px solid var(--line);padding:26px 24px;text-align:center;color:var(--muted);font-size:12.5px}
+  footer b{background:linear-gradient(90deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent}
 </style>
 </head>
 <body>
 
-<nav>
-  <div class="logo" onclick="location.href='index.html'">Manga<span>Verse</span></div>
-  <div class="nav-links">
-    <a href="index.html" class="active">Beranda</a>
-    <a href="genre.html">Genre</a>
-    <a href="bookmark.html">Bookmark</a>
-    <a href="profile.html">Profil</a>
-    <a href="admin.html">Admin</a>
+<header class="topbar">
+  <div class="brand" onclick="location.hash=''">MangaKu</div>
+  <div class="search">
+    <span class="icon">🔍</span>
+    <input id="searchInput" type="text" placeholder="Cari manga...">
   </div>
-  <div class="search-box">
-    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
-      <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
-    </svg>
-    <input type="text" id="searchInput" placeholder="Cari manga...">
+  <nav class="topnav">
+    <button onclick="location.hash=''" id="navHome"><span>🏠</span><span class="label">Beranda</span></button>
+    <button onclick="location.hash='#favorites'" id="navFav"><span>❤️</span><span class="label">Favorit</span></button>
+    <button onclick="toggleTheme()" class="iconbtn" id="themeBtn" title="Ganti tema">🌙</button>
+    <button onclick="location.hash='#profile'" id="navUser"><span>👤</span><span class="label" id="userLabel">Masuk</span></button>
+  </nav>
+</header>
+
+<main id="app"></main>
+
+<nav class="bottomnav">
+  <div class="bn">
+    <button onclick="location.hash=''" id="bnHome"><span class="bi">🏠</span>Beranda</button>
+    <button onclick="location.hash='#favorites'" id="bnFav"><span class="bi">❤️</span>Favorit</button>
+    <button onclick="location.hash='#profile'" id="bnUser"><span class="bi">👤</span>Akun</button>
   </div>
 </nav>
 
-<div class="hero">
-  <div class="hero-content">
-    <div class="badge"><span class="dot"></span> TRENDING #1 MINGGU INI</div>
-    <h1>Petualangan <em>Tak Terbatas</em> di Dunia Manga</h1>
-    <p>Baca ribuan judul manga favoritmu dengan pengalaman membaca yang mulus, cepat, dan bebas gangguan. Update chapter baru setiap hari!</p>
-    <div class="hero-btns">
-      <a href="detail.html?id=one-piece" class="btn btn-primary">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-        Mulai Baca
-      </a>
-      <a href="genre.html" class="btn btn-ghost">Jelajahi Genre</a>
-    </div>
-  </div>
-  <div class="hero-visual">
-    <div class="hero-cover" id="hc1"></div>
-    <div class="hero-cover" id="hc2"></div>
-    <div class="hero-cover" id="hc3"></div>
-  </div>
-</div>
-
-<section>
-  <div class="section-head"><h2>🔥 Manga Populer</h2><a href="genre.html" class="see-all">Lihat Semua →</a></div>
-  <div class="grid" id="popularGrid"></div>
-</section>
-
-<section>
-  <div class="section-head"><h2>📖 Lanjut Baca</h2></div>
-  <div class="continue-list" id="continueList"></div>
-</section>
-
-<section>
-  <div class="section-head"><h2>🆕 Update Terbaru</h2><a href="genre.html" class="see-all">Lihat Semua →</a></div>
-  <div class="grid" id="latestGrid"></div>
-</section>
-
 <footer>
-  <div class="logo">Manga<span>Verse</span></div>
-  <p>© 2025 MangaVerse. Dibuat dengan ❤️ untuk para pecinta manga.</p>
+  <b>MangaKu</b> — Demo website baca manga. Semua judul & gambar adalah placeholder.<br>
+  Dibuat dengan HTML, CSS, dan JavaScript murni.
 </footer>
 
-<script src="js/data.js"></script>
-<script src="js/main.js"></script>
+<div class="toast" id="toast"></div>
+
+<script>
+/* =========================================================
+   DATA MANGA
+   Tambahkan field `cover: "URL_GAMBAR"` untuk pakai gambar asli.
+   Kalau `cover` kosong, sistem otomatis membuat cover dari warna.
+   ========================================================= */
+const MANGA = [
+  { id:1, title:"Shadow Blade Chronicles", author:"Kenji Tanaka", genres:["Action","Fantasy"], status:"Ongoing",
+    rating:4.8, chapters:142, views:"2.4M", colors:["#1e3a8a","#7c3aed"],
+    synopsis:"Setelah klannya dimusnahkan, Rei mewarisi pedang bayangan yang mampu mencuri cahaya dari langit. Dalam perjalanan balas dendamnya, ia menemukan bahwa kegelapan yang ia lawan justru berasal dari dalam dirinya sendiri." },
+
+  { id:2, title:"Sakura di Musim Hujan", author:"Aoi Yamada", genres:["Romance","Slice of Life"], status:"Completed",
+    rating:4.6, chapters:64, views:"1.1M", colors:["#be185d","#f472b6"],
+    synopsis:"Haru selalu lupa membawa payung. Ketika seorang gadis asing menawarkan setengah dari payungnya setiap sore di halte yang sama, keduanya mulai belajar bahwa cinta tumbuh perlahan seperti bunga sakura di luar musimnya." },
+
+  { id:3, title:"Neon Tokyo 2099", author:"Ryu Nakamura", genres:["Sci-Fi","Action"], status:"Ongoing",
+    rating:4.9, chapters:88, views:"3.1M", colors:["#0891b2","#a21caf"],
+    synopsis:"Di kota yang dijual kepada korporasi, seorang kurir data ilegal menemukan chip yang berisi kesadaran manusia terakhir. Kini seluruh megacity menginginkannya mati — atau hidup sebagai barang." },
+
+  { id:4, title:"Kutukan Rumah Kabut", author:"Sora Ishida", genres:["Horror","Mystery"], status:"Ongoing",
+    rating:4.5, chapters:47, views:"890K", colors:["#166534","#0f172a"],
+    synopsis:"Setiap orang yang menginap di rumah itu melaporkan mimpi yang sama: sebuah pintu yang tidak pernah ada di lantai dua. Ketika seorang penulis mulai menyelidiki, ia menyadari mimpi itu mulai merembes ke dunia nyata." },
+
+  { id:5, title:"Kapten Kelas B", author:"Mika Sato", genres:["Comedy","Slice of Life"], status:"Ongoing",
+    rating:4.4, chapters:73, views:"720K", colors:["#ea580c","#facc15"],
+    synopsis:"Rencana hidup Rina hancur ketika ia ditunjuk jadi ketua kelas B — kelas yang terkenal karena setiap ketuanya mengundurkan diri dalam sebulan. Komedi tentang bertahan hidup di sekolah menengah." },
+
+  { id:6, title:"Penempa Naga Terakhir", author:"Hiroshi Ito", genres:["Fantasy","Action"], status:"Ongoing",
+    rating:4.7, chapters:110, views:"1.9M", colors:["#7f1d1d","#f59e0b"],
+    synopsis:"Naga telah punah selama tiga ratus tahun. Tapi ketika seorang pandai besi muda menemukan telur terakhir di dalam tungku neneknya, dunia lama mulai bangkit — beserta perang yang mengakhirinya." },
+
+  { id:7, title:"Detektif Jingga", author:"Yuki Kobayashi", genres:["Mystery","Action"], status:"Completed",
+    rating:4.6, chapters:95, views:"1.4M", colors:["#c2410c","#1e293b"],
+    synopsis:"Seorang detektif dengan kemampuan mengingat segalanya tidak bisa melupakan satu malam kelam dalam hidupnya. Setiap kasus yang ia pecahkan membawanya semakin dekat pada jawaban yang ia takuti." },
+
+  { id:8, title:"Langit Kedua", author:"Nana Fujimoto", genres:["Sci-Fi","Romance"], status:"Ongoing",
+    rating:4.5, chapters:58, views:"640K", colors:["#4338ca","#06b6d4"],
+    synopsis:"Bumi sudah tidak layak huni, dan umat manusia tinggal di stasiun orbit. Ketika seorang teknisi menerima sinyal radio dari planet yang seharusnya mati, ia mendengar suara seseorang yang menunggunya selama dua puluh tahun." },
+
+  { id:9, title:"Akademi Sihir Merah", author:"Takeshi Mori", genres:["Fantasy","Comedy"], status:"Ongoing",
+    rating:4.3, chapters:132, views:"1.7M", colors:["#991b1b","#8b5cf6"],
+    synopsis:"Sekolah sihir paling bergengsi hanya menerima satu siswa per tahun dari desa terpencil. Tahun ini, yang datang adalah anak yang bahkan tidak bisa menyalakan lilin — tapi bisa membekukan waktu." },
+
+  { id:10, title:"Jalan Pulang", author:"Emi Watanabe", genres:["Slice of Life","Mystery"], status:"Completed",
+    rating:4.8, chapters:41, views:"510K", colors:["#0d9488","#334155"],
+    synopsis:"Seorang pria tua berjalan pulang setiap hari melalui rute yang sama selama empat puluh tahun. Suatu hari ia mengambil jalan yang berbeda, dan menemukan bahwa rumahnya telah menunggu sejak lama." },
+
+  { id:11, title:"Gadis dan Robot Tua", author:"Daiki Shimizu", genres:["Sci-Fi","Slice of Life"], status:"Ongoing",
+    rating:4.7, chapters:69, views:"830K", colors:["#0369a1","#f472b6"],
+    synopsis:"Di desa yang ditinggalkan penduduknya, seorang gadis kecil merawat robot pertanian yang sudah rusak. Robot itu tidak bisa berbicara, tapi ia mengingat setiap nama orang yang pernah tinggal di sana." },
+
+  { id:12, title:"Perang Bayangan Merah", author:"Kaito Abe", genres:["Action","Mystery"], status:"Ongoing",
+    rating:4.6, chapters:157, views:"2.8M", colors:["#450a0a","#dc2626"],
+    synopsis:"Dua organisasi rahasia telah berperang di bawah kota selama seratus tahun tanpa diketahui penduduknya. Seorang mahasiswa biasa tanpa sengaja menjadi kunci yang bisa mengakhiri — atau mengabadikan — perang itu." }
+];
+
+const GENRES = ["Semua","Action","Fantasy","Romance","Horror","Comedy","Sci-Fi","Slice of Life","Mystery"];
+
+/* =========================================================
+   STATE + STORAGE
+   ========================================================= */
+const LS = {
+  theme:    'mangaku_theme',
+  session:  'mangaku_session',
+  users:    'mangaku_users',
+  lastRead: 'mangaku_lastread',
+  favPrefix:'mangaku_favs_'
+};
+
+let state = {
+  theme: localStorage.getItem(LS.theme) || 'dark',
+  user: null,           // { username }
+  favorites: new Set(),
+  genre: 'Semua',
+  query: ''
+};
+
+function currentFavKey(){ return LS.favPrefix + (state.user ? state.user.username : 'guest'); }
+function loadFavorites(){
+  try { state.favorites = new Set(JSON.parse(localStorage.getItem(currentFavKey()) || '[]')); }
+  catch(e){ state.favorites = new Set(); }
+}
+function saveFavorites(){
+  try { localStorage.setItem(currentFavKey(), JSON.stringify([...state.favorites])); } catch(e){}
+}
+function loadSession(){
+  try { state.user = JSON.parse(localStorage.getItem(LS.session) || 'null'); } catch(e){ state.user = null; }
+  loadFavorites();
+}
+function saveSession(u){
+  state.user = u;
+  if (u) localStorage.setItem(LS.session, JSON.stringify(u));
+  else localStorage.removeItem(LS.session);
+  loadFavorites();
+  updateUserUI();
+}
+function getUsers(){
+  try { return JSON.parse(localStorage.getItem(LS.users) || '{}'); } catch(e){ return {}; }
+}
+function hashPass(s){ let h=5381; for(let i=0;i<s.length;i++) h=((h<<5)+h+s.charCodeAt(i))|0; return 'h'+Math.abs(h); }
+
+/* =========================================================
+   UTIL
+   ========================================================= */
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const byId = id => MANGA.find(m => m.id === id);
+function hashStr(s){ let h=0; for(let i=0;i<s.length;i++) h=(h*31+s.charCodeAt(i))|0; return Math.abs(h); }
+function rng(seed){ let s=(seed%2147483647)||1; return ()=> (s = s*16807 % 2147483647)/2147483647; }
+
+/* ---------- Toast ---------- */
+let toastTimer;
+function toast(msg, icon='✨'){
+  const el = document.getElementById('toast');
+  el.innerHTML = `<span>${icon}</span><span>${esc(msg)}</span>`;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
+}
+
+/* ---------- Theme ---------- */
+function applyTheme(){
+  document.documentElement.setAttribute('data-theme', state.theme);
+  const btn = document.getElementById('themeBtn');
+  if (btn) btn.textContent = state.theme === 'dark' ? '🌙' : '☀️';
+}
+function toggleTheme(){
+  state.theme = state.theme === 'dark' ? 'light' : 'dark';
+  localStorage.setItem(LS.theme, state.theme);
+  applyTheme();
+}
+
+/* ---------- Favorites ---------- */
+function isFav(id){ return state.favorites.has(id); }
+function toggleFav(id, ev){
+  if (ev) ev.stopPropagation();
+  const m = byId(id);
+  if (!m) return;
+  if (state.favorites.has(id)){
+    state.favorites.delete(id);
+    toast(`Dihapus dari favorit`, '💔');
+  } else {
+    state.favorites.add(id);
+    toast(`"${m.title}" ditambahkan ke favorit`, '❤️');
+  }
+  saveFavorites();
+  refreshFavButtons(id);
+}
+function refreshFavButtons(id){
+  document.querySelectorAll(`.fav-btn[data-id="${id}"]`).forEach(b => {
+    b.classList.toggle('on', isFav(id));
+    b.textContent = isFav(id) ? '❤️' : '🤍';
+  });
+  if (location.hash.startsWith('#favorites')) route();
+}
+
+/* =========================================================
+   COVER & PAGE GENERATOR
+   ========================================================= */
+function wrapText(text, max){
+  const words = text.split(' '); const lines = []; let cur = '';
+  words.forEach(w => {
+    if ((cur + ' ' + w).trim().length > max) { lines.push(cur.trim()); cur = w; }
+    else cur += ' ' + w;
+  });
+  if (cur.trim()) lines.push(cur.trim());
+  return lines;
+}
+const coverCache = {};
+function coverURI(m){
+  if (m.cover) return m.cover;               // pakai gambar asli jika ada
+  if (coverCache[m.id]) return coverCache[m.id];
+  const [c1, c2] = m.colors || ['#334155','#0f172a'];
+  const lines = wrapText(m.title, 15).slice(0, 3);
+  const startY = 300 - (lines.length - 1) * 17;
+  const tspans = lines.map((l, i) =>
+    `<tspan x="150" dy="${i === 0 ? 0 : 34}">${esc(l)}</tspan>`).join('');
+  const svg =
+`<svg xmlns="http://www.w3.org/2000/svg" width="300" height="420" viewBox="0 0 300 420">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="${c1}"/><stop offset="100%" stop-color="${c2}"/>
+    </linearGradient>
+    <radialGradient id="r" cx="0.82" cy="0.12" r="0.75">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.30"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="300" height="420" fill="url(#g)"/>
+  <circle cx="248" cy="72" r="118" fill="#ffffff" opacity="0.07"/>
+  <circle cx="52" cy="368" r="96" fill="#000000" opacity="0.16"/>
+  <circle cx="150" cy="180" r="62" fill="none" stroke="#ffffff" stroke-opacity="0.18" stroke-width="1.5"/>
+  <circle cx="150" cy="180" r="88" fill="none" stroke="#ffffff" stroke-opacity="0.10" stroke-width="1.5"/>
+  <rect width="300" height="420" fill="url(#r)"/>
+  <rect x="0" y="240" width="300" height="180" fill="#000000" opacity="0.28"/>
+  <text x="150" y="${startY}" font-family="Georgia,'Times New Roman',serif" font-size="26"
+        font-weight="bold" fill="#ffffff" text-anchor="middle">${tspans}</text>
+  <text x="150" y="392" font-family="Helvetica,Arial,sans-serif" font-size="12.5"
+        fill="#ffffff" fill-opacity="0.72" text-anchor="middle">${esc(m.author)}</text>
+</svg>`;
+  const uri = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+  coverCache[m.id] = uri;
+  return uri;
+}
+
+function panel(x, y, w, h, r){
+  let art = '';
+  const shapes = 2 + Math.floor(r() * 4);
+  for (let i = 0; i < shapes; i++){
+    const t = r();
+    const cx = x + 20 + r() * (w - 40);
+    const cy = y + 20 + r() * (h - 40);
+    if (t < 0.35){
+      art += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${(8 + r() * 34).toFixed(1)}"
+              fill="#cfcfcf" opacity="${(0.35 + r() * 0.4).toFixed(2)}"/>`;
+    } else if (t < 0.7){
+      art += `<rect x="${(cx - 30).toFixed(1)}" y="${(cy - 18).toFixed(1)}"
+              width="${(24 + r() * 70).toFixed(1)}" height="${(16 + r() * 50).toFixed(1)}"
+              fill="#d8d8d8" opacity="${(0.35 + r() * 0.35).toFixed(2)}"
+              transform="rotate(${(r() * 40 - 20).toFixed(1)} ${cx.toFixed(1)} ${cy.toFixed(1)})"/>`;
+    } else {
+      art += `<line x1="${(x + 20).toFixed(1)}" y1="${cy.toFixed(1)}"
+              x2="${(x + w - 20).toFixed(1)}" y2="${(cy + r() * 30 - 15).toFixed(1)}"
+              stroke="#bdbdbd" stroke-width="${(2 + r() * 5).toFixed(1)}" stroke-linecap="round"/>`;
+    }
+  }
+  const id = 'c' + Math.round(x) + '_' + Math.round(y);
+  return `<g>
+    <rect x="${x}" y="${y}" width="${w}" height="${h}" fill="#f7f7f7" stroke="#141414" stroke-width="3.5" rx="3"/>
+    <clipPath id="${id}"><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="3"/></clipPath>
+    <g clip-path="url(#${id})">${art}</g>
+  </g>`;
+}
+
+function pageURI(m, ch, p){
+  const seed = hashStr(m.id + '-' + ch + '-' + p);
+  const r = rng(seed + 7);
+  const W = 800, H = 1180, PAD = 40, GAP = 18;
+  const rows = 3 + Math.floor(r() * 2);
+  const avail = H - PAD * 2 - GAP * (rows - 1);
+  const heights = [];
+  let rem = avail;
+  for (let i = 0; i < rows; i++){
+    if (i === rows - 1) heights.push(rem);
+    else { const h = rem * (0.22 + r() * 0.16); heights.push(h); rem -= h; }
+  }
+  let y = PAD, panels = '';
+  heights.forEach(h => {
+    const twoCol = r() > 0.55;
+    if (twoCol){
+      const w1 = (W - PAD * 2 - GAP) * (0.34 + r() * 0.32);
+      panels += panel(PAD, y, w1, h, r);
+      panels += panel(PAD + w1 + GAP, y, W - PAD * 2 - GAP - w1, h, r);
+    } else {
+      panels += panel(PAD, y, W - PAD * 2, h, r);
+    }
+    y += h + GAP;
+  });
+  const svg =
+`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
+  <rect width="${W}" height="${H}" fill="#ffffff"/>
+  ${panels}
+  <text x="${W / 2}" y="${H - 13}" font-family="Helvetica,Arial,sans-serif" font-size="13"
+        fill="#999" text-anchor="middle">Ch. ${ch} — Hal. ${p + 1}</text>
+</svg>`;
+  return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+}
+
+function pageCount(m, ch){ return 9 + (hashStr(m.id + ':' + ch) % 8); }
+
+/* ---------- Last read ---------- */
+function saveLastRead(m, ch, p){
+  try { localStorage.setItem(LS.lastRead, JSON.stringify({ id:m.id, ch, p, title:m.title, ts:Date.now() })); } catch(e){}
+}
+function getLastRead(){
+  try { return JSON.parse(localStorage.getItem(LS.lastRead) || 'null'); } catch(e){ return null; }
+}
+/* ---------- Read chapters (per manga) ---------- */
+function readChaptersKey(id){ return 'mangaku_read_' + (state.user ? state.user.username : 'guest') + '_' + id; }
+function markChapterRead(id, ch){
+  try {
+    const arr = JSON.parse(localStorage.getItem(readChaptersKey(id)) || '[]');
+    if (!arr.includes(ch)) { arr.push(ch); localStorage.setItem(readChaptersKey(id), JSON.stringify(arr)); }
+  } catch(e){}
+}
+function isChapterRead(id, ch){
+  try { return JSON.parse(localStorage.getItem(readChaptersKey(id)) || '[]').includes(ch); } catch(e){ return false; }
+}
+
+/* =========================================================
+   UI HEADER HELPERS
+   ========================================================= */
+function updateUserUI(){
+  const label = document.getElementById('userLabel');
+  const navUser = document.getElementById('navUser');
+  const bnUser = document.getElementById('bnUser');
+  if (state.user){
+    if (label) label.textContent = state.user.username;
+    if (navUser) navUser.querySelector('span:first-child').textContent = '👤';
+    if (bnUser) bnUser.innerHTML = `<span class="bi">👤</span>${esc(state.user.username).slice(0,8)}`;
+  } else {
+    if (label) label.textContent = 'Masuk';
+    if (navUser) navUser.querySelector('span:first-child').textContent = '👤';
+    if (bnUser) bnUser.innerHTML = `<span class="bi">👤</span>Akun`;
+  }
+}
+function setActiveNav(which){
+  ['navHome','navFav','navUser','bnHome','bnFav','bnUser'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('active');
+  });
+  const map = { home:['navHome','bnHome'], fav:['navFav','bnFav'], user:['navUser','bnUser'] };
+  (map[which] || []).forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.add('active');
+  });
+}
+
+/* =========================================================
+   ROUTER
+   ========================================================= */
+const app = document.getElementById('app');
+let currentReader = null;
+
+function route(){
+  const parts = location.hash.replace(/^#/, '').split('/').filter(Boolean);
+  window.scrollTo(0, 0);
+  document.onkeydown = null;
+  currentReader = null;
+
+  const [a, b, c, d] = parts;
+  if (a === 'manga' && b)            renderDetail(+b);
+  else if (a === 'read' && b && c)   renderReader(+b, +c, +(d || 0));
+  else if (a === 'favorites')        renderFavorites();
+  else if (a === 'login')            renderLogin();
+  else if (a === 'profile')          renderProfile();
+  else                               renderHome();
+}
+window.addEventListener('hashchange', route);
+
+/* =========================================================
+   HOME
+   ========================================================= */
+function renderHome(){
+  setActiveNav('home');
+  const last = getLastRead();
+  const lastManga = last ? byId(last.id) : null;
+
+  app.innerHTML = `
+    ${lastManga ? `
+      <div class="continue">
+        <img src="${coverURI(lastManga)}" alt="">
+        <div class="ci">
+          <h3>${esc(lastManga.title)}</h3>
+          <p>Terakhir dibaca · Chapter ${last.ch} · Halaman ${last.p + 1}</p>
+          <a class="btn" href="#read/${lastManga.id}/${last.ch}/${last.p}">▶ Lanjut Baca</a>
+        </div>
+      </div>` : ''}
+
+    <div class="chips" id="genreChips">
+      ${GENRES.map(g => `<button class="chip${g === state.genre ? ' active' : ''}" data-genre="${esc(g)}">${esc(g)}</button>`).join('')}
+    </div>
+
+    <h2 class="section-title" id="sectionTitle">${state.genre === 'Semua' ? 'Semua Manga' : esc(state.genre)}</h2>
+    <div class="grid" id="grid"></div>
+    <div id="emptyState"></div>
+  `;
+
+  document.getElementById('genreChips').addEventListener('click', e => {
+    const btn = e.target.closest('.chip');
+    if (!btn) return;
+    state.genre = btn.dataset.genre;
+    document.querySelectorAll('.chip').forEach(c => c.classList.toggle('active', c === btn));
+    document.getElementById('sectionTitle').textContent =
+      state.genre === 'Semua' ? 'Semua Manga' : state.genre;
+    renderGrid();
+  });
+
+  renderGrid();
+}
+
+function mangaCardHTML(m){
+  const fav = isFav(m.id);
+  return `
+    <article class="card" onclick="location.hash='#manga/${m.id}'">
+      <div class="thumb">
+        <img src="${coverURI(m)}" alt="${esc(m.title)}" loading="lazy"
+             onerror="this.src='${coverURI({...m, cover:null})}'">
+        <span class="badge rating">★ ${m.rating}</span>
+        <button class="fav-btn${fav ? ' on' : ''}" data-id="${m.id}"
+                onclick="toggleFav(${m.id}, event)" title="Favorit">${fav ? '❤️' : '🤍'}</button>
+      </div>
+      <div class="info">
+        <h3>${esc(m.title)}</h3>
+        <div class="meta"><span>${m.chapters} Ch</span><span>${esc(m.genres[0])}</span></div>
+      </div>
+    </article>`;
+}
+
+function renderGrid(){
+  const grid = document.getElementById('grid');
+  const empty = document.getElementById('emptyState');
+  if (!grid) return;
+
+  const q = state.query.trim().toLowerCase();
+  const list = MANGA.filter(m => {
+    const okGenre = state.genre === 'Semua' || m.genres.includes(state.genre);
+    const okQuery = !q || m.title.toLowerCase().includes(q) ||
+                    m.author.toLowerCase().includes(q) ||
+                    m.genres.some(g => g.toLowerCase().includes(q));
+    return okGenre && okQuery;
+  });
+
+  if (!list.length){
+    grid.innerHTML = '';
+    empty.innerHTML = `<div class="empty"><div class="big">🔎</div>
+      <h3>Tidak ada hasil</h3>
+      <p>Coba kata kunci atau genre lain.</p></div>`;
+    return;
+  }
+  empty.innerHTML = '';
+  grid.innerHTML = list.map(mangaCardHTML).join('');
+}
+
+/* Search */
+document.getElementById('searchInput').addEventListener('input', e => {
+  state.query = e.target.value;
+  if (location.hash && location.hash !== '#') location.hash = '';
+  else if (typeof renderGrid === 'function') renderGrid();
+});
+
+/* =========================================================
+   DETAIL
+   ========================================================= */
+function renderDetail(id){
+  setActiveNav('home');
+  const m = byId(id);
+  if (!m){ app.innerHTML = `<div class="empty"><div class="big">😕</div><h3>Manga tidak ditemukan</h3></div>`; return; }
+
+  const chapters = [];
+  for (let c = m.chapters; c >= 1; c--) chapters.push(c);
+  const fav = isFav(m.id);
+  const last = getLastRead();
+  const isLastHere = last && last.id === m.id;
+
+  app.innerHTML = `
+    <div style="margin-bottom:22px"><button class="btn ghost" onclick="history.length>1?history.back():location.hash=''">← Kembali</button></div>
+    <div class="detail">
+      <div>
+        <img class="poster" src="${coverURI(m)}" alt="${esc(m.title)}"
+             onerror="this.src='${coverURI({...m, cover:null})}'">
+      </div>
+      <div>
+        <h1>${esc(m.title)}</h1>
+        <div class="tagrow">
+          <span class="tag status">${esc(m.status)}</span>
+          ${m.genres.map(g => `<span class="tag">${esc(g)}</span>`).join('')}
+        </div>
+        <div class="stats">
+          <div>Rating<strong>★ ${m.rating}</strong></div>
+          <div>Chapter<strong>${m.chapters}</strong></div>
+          <div>Pembaca<strong>${esc(m.views)}</strong></div>
+          <div>Author<strong style="font-size:15px">${esc(m.author)}</strong></div>
+        </div>
+        <div class="detail-actions">
+          ${isLastHere
+            ? `<a class="btn" href="#read/${m.id}/${last.ch}/${last.p}">▶ Lanjut Chapter ${last.ch}</a>`
+            : `<a class="btn" href="#read/${m.id}/1/0">▶ Mulai Baca</a>`}
+          <button class="btn ghost fav-btn-lg" data-id="${m.id}" onclick="toggleFav(${m.id}, event)">
+            ${fav ? '❤️ Tersimpan' : '🤍 Favorit'}
+          </button>
+        </div>
+        <p class="synopsis">${esc(m.synopsis)}</p>
+
+        <h2 class="section-title" style="font-size:16px">Daftar Chapter</h2>
+        <div class="chapters">
+          ${chapters.map(c => `
+            <button class="${isChapterRead(m.id, c) ? 'read' : ''}"
+                    onclick="location.hash='#read/${m.id}/${c}/0'">Chapter ${c}</button>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/* =========================================================
+   READER
+   ========================================================= */
+function renderReader(id, ch, p){
+  const m = byId(id);
+  if (!m){ location.hash = ''; return; }
+
+  ch = Math.max(1, Math.min(m.chapters, ch || 1));
+  const total = pageCount(m, ch);
+  p = Math.max(0, Math.min(total - 1, p || 0));
+
+  saveLastRead(m, ch, p);
+  if (p === total - 1) markChapterRead(m.id, ch);
+
+  const options = [];
+  for (let c = 1; c <= m.chapters; c++)
+    options.push(`<option value="${c}"${c === ch ? ' selected' : ''}>Chapter ${c}</option>`);
+
+  const fav = isFav(m.id);
+
+  app.innerHTML = `
+    <div class="reader-bar">
+      <button class="iconbtn" title="Kembali" onclick="location.hash='#manga/${m.id}'">←</button>
+      <div class="rt">
+        <h2>${esc(m.title)}</h2>
+        <p>Chapter ${ch} · Halaman ${p + 1} dari ${total}</p>
+      </div>
+      <button class="iconbtn fav-btn" data-id="${m.id}" onclick="toggleFav(${m.id}, event)"
+              title="Favorit">${fav ? '❤️' : '🤍'}</button>
+      <select id="chapterSelect">${options.join('')}</select>
+      <button class="iconbtn" id="prevPageBtn" title="Sebelumnya" ${p === 0 ? 'disabled' : ''}>‹</button>
+      <button class="iconbtn" id="nextPageBtn" title="Berikutnya" ${p === total - 1 ? 'disabled' : ''}>›</button>
+    </div>
+    <div class="progress"><i style="width:${((p + 1) / total * 100).toFixed(1)}%"></i></div>
+
+    <div class="reader-wrap">
+      <img class="page-img" id="pageImg" src="${pageURI(m, ch, p)}" alt="Halaman ${p + 1}">
+      <p class="page-hint">Gunakan tombol ← → pada keyboard, atau klik sisi kiri/kanan halaman.</p>
+
+      ${p === total - 1 ? `
+        <div class="chapter-end">
+          <h3>Chapter ${ch} selesai 🎉</h3>
+          <p>${ch < m.chapters ? 'Lanjut ke chapter berikutnya?' : 'Kamu sudah mencapai chapter terakhir.'}</p>
+          <div class="row">
+            ${ch < m.chapters
+              ? `<button class="btn" onclick="location.hash='#read/${m.id}/${ch + 1}/0'">Chapter ${ch + 1} →</button>`
+              : ''}
+            <button class="btn ghost" onclick="location.hash='#manga/${m.id}'">Daftar Chapter</button>
+          </div>
+        </div>` : ''}
+    </div>
+
+    <div class="navzone left"  onclick="goPage(-1)"><span>‹</span></div>
+    <div class="navzone right" onclick="goPage(1)"><span>›</span></div>
+  `;
+
+  document.getElementById('chapterSelect').addEventListener('change', e => {
+    location.hash = `#read/${m.id}/${e.target.value}/0`;
+  });
+  document.getElementById('prevPageBtn').onclick = () => goPage(-1);
+  document.getElementById('nextPageBtn').onclick = () => goPage(1);
+
+  currentReader = { m, ch, p, total };
+  document.onkeydown = e => {
+    if (e.key === 'ArrowRight' || e.key === 'd') goPage(1);
+    if (e.key === 'ArrowLeft'  || e.key === 'a') goPage(-1);
+  };
+  bindSwipe();
+}
+
+function goPage(delta){
+  if (!currentReader) return;
+  const { m, ch, p, total } = currentReader;
+  const next = p + delta;
+
+  if (next < 0){
+    if (ch > 1) location.hash = `#read/${m.id}/${ch - 1}/9999`;
+    return;
+  }
+  if (next >= total){
+    if (ch < m.chapters) location.hash = `#read/${m.id}/${ch + 1}/0`;
+    return;
+  }
+  location.hash = `#read/${m.id}/${ch}/${next}`;
+}
+
+function bindSwipe(){
+  let x0 = null, y0 = null;
+  const el = document.querySelector('.reader-wrap');
+  if (!el) return;
+  el.addEventListener('touchstart', e => {
+    x0 = e.touches[0].clientX; y0 = e.touches[0].clientY;
+  }, { passive: true });
+  el.addEventListener('touchend', e => {
+    if (x0 === null) return;
+    const dx = e.changedTouches[0].clientX - x0;
+    const dy = e.changedTouches[0].clientY - y0;
+    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy)) goPage(dx < 0 ? 1 : -1);
+    x0 = y0 = null;
+  }, { passive: true });
+}
+
+/* =========================================================
+   FAVORITES
+   ========================================================= */
+function renderFavorites(){
+  setActiveNav('fav');
+  const list = MANGA.filter(m => state.favorites.has(m.id));
+
+  app.innerHTML = `
+    <div class="section-head">
+      <h2 class="section-title">❤️ Favorit Saya</h2>
+      ${!state.user ? `<button class="btn ghost" onclick="location.hash='#login'">Masuk untuk sinkron</button>` : ''}
+    </div>
+    ${list.length
+      ? `<div class="grid">${list.map(mangaCardHTML).join('')}</div>`
+      : `<div class="empty">
+          <div class="big">🤍</div>
+          <h3>Belum ada manga favorit</h3>
+          <p>Tekan ikon hati pada manga untuk menyimpannya di sini.</p>
+          <div style="margin-top:20px"><a class="btn" href="#/" onclick="location.hash=''">Jelajahi Manga</a></div>
+        </div>`}
+  `;
+}
+
+/* =========================================================
+   LOGIN / REGISTER
+   ========================================================= */
+let authMode = 'login';
+
+function renderLogin(){
+  setActiveNav('user');
+  if (state.user){ location.hash = '#profile'; return; }
+
+  app.innerHTML = `
+    <div class="auth-wrap">
+      <h1>${authMode === 'login' ? 'Masuk' : 'Daftar Akun'}</h1>
+      <p class="sub">${authMode === 'login'
+        ? 'Selamat datang kembali di MangaKu.'
+        : 'Buat akun untuk menyimpan favorit & riwayat.'}</p>
+
+      <div class="auth-error" id="authError"></div>
+
+      <form id="authForm">
+        <div class="field">
+          <label>Username</label>
+          <input type="text" id="usernameInput" autocomplete="username"
+                 placeholder="minimal 3 karakter" required>
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <input type="password" id="passwordInput" autocomplete="current-password"
+                 placeholder="minimal 4 karakter" required>
+        </div>
+        <button class="btn full" type="submit">
+          ${authMode === 'login' ? 'Masuk' : 'Daftar'}
+        </button>
+      </form>
+
+      <p class="auth-switch">
+        ${authMode === 'login' ? 'Belum punya akun?' : 'Sudah punya akun?'}
+        <button id="switchAuth">${authMode === 'login' ? 'Daftar sekarang' : 'Masuk'}</button>
+      </p>
+    </div>
+  `;
+
+  document.getElementById('switchAuth').onclick = () => {
+    authMode = authMode === 'login' ? 'register' : 'login';
+    renderLogin();
+  };
+
+  document.getElementById('authForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const username = document.getElementById('usernameInput').value.trim();
+    const password = document.getElementById('passwordInput').value;
+    const err = document.getElementById('authError');
+    const showErr = msg => { err.textContent = msg; err.classList.add('show'); };
+
+    if (username.length < 3) return showErr('Username minimal 3 karakter.');
+    if (password.length < 4) return showErr('Password minimal 4 karakter.');
+
+    const users = getUsers();
+
+    if (authMode === 'register'){
+      if (users[username]) return showErr('Username sudah terpakai.');
+      users[username] = hashPass(password);
+      localStorage.setItem(LS.users, JSON.stringify(users));
+      saveSession({ username });
+      toast(`Selamat datang, ${username}!`, '🎉');
+      location.hash = '#profile';
+    } else {
+      if (!users[username]) return showErr('Username belum terdaftar.');
+      if (users[username] !== hashPass(password)) return showErr('Password salah.');
+      saveSession({ username });
+      toast(`Halo lagi, ${username}!`, '👋');
+      location.hash = '#profile';
+    }
+  });
+}
+
+/* =========================================================
+   PROFILE
+   ========================================================= */
+function renderProfile(){
+  setActiveNav('user');
+  if (!state.user){ location.hash = '#login'; return; }
+
+  const favCount = state.favorites.size;
+  const last = getLastRead();
+  let totalRead = 0;
+  MANGA.forEach(m => {
+    try { totalRead += JSON.parse(localStorage.getItem(readChaptersKey(m.id)) || '[]').length; } catch(e){}
+  });
+
+  app.innerHTML = `
+    <div class="profile-head">
+      <div class="avatar">${esc(state.user.username[0].toUpperCase())}</div>
+      <div>
+        <h2>${esc(state.user.username)}</h2>
+        <p>Anggota MangaKu</p>
+      </div>
+    </div>
+
+    <div class="stats" style="border:none;gap:32px;padding:0;margin-bottom:26px">
+      <div>Manga Favorit<strong>${favCount}</strong></div>
+      <div>Chapter Dibaca<strong>${totalRead}</strong></div>
+    </div>
+
+    <div class="detail-actions">
+      <button class="btn ghost" onclick="location.hash='#favorites'">❤️ Lihat Favorit</button>
+      ${last ? `<a class="btn" href="#read/${last.id}/${last.ch}/${last.p}">▶ Lanjut Baca</a>` : ''}
+      <button class="btn danger" onclick="logout()">Keluar</button>
+    </div>
+  `;
+}
+
+function logout(){
+  saveSession(null);
+  toast('Kamu sudah keluar.', '👋');
+  location.hash = '';
+}
+
+/* =========================================================
+   INIT
+   ========================================================= */
+applyTheme();
+loadSession();
+updateUserUI();
+route();
+</script>
 </body>
 </html>
