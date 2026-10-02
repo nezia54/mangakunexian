@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MangaVerse — Baca Manga Online</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .hero { margin: 32px 5% 0; border-radius: 24px; padding: 48px 5%;
+    background: linear-gradient(120deg, rgba(23,23,36,0.9), rgba(23,23,36,0.5)), var(--gradient);
+    background-blend-mode: overlay; position: relative; overflow: hidden;
+    display: grid; grid-template-columns: 1.4fr 1fr; gap: 40px; align-items: center;
+    border: 1px solid var(--border); }
+  .hero::before { content: ''; position: absolute; inset: 0;
+    background: radial-gradient(circle at 80% 50%, rgba(236,72,153,0.35), transparent 50%),
+                radial-gradient(circle at 20% 80%, rgba(99,102,241,0.3), transparent 50%);
+    pointer-events: none; }
+  .hero-content { position: relative; z-index: 2; }
+  .badge { display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(168,85,247,0.15); border: 1px solid rgba(168,85,247,0.4);
+    color: #d8b4fe; font-size: 12px; font-weight: 700;
+    padding: 6px 14px; border-radius: 999px; margin-bottom: 18px; letter-spacing: 0.5px; }
+  .badge .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
+    box-shadow: 0 0 10px var(--accent); animation: pulse 1.6s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.4); } }
+  .hero h1 { font-size: clamp(28px, 4vw, 46px); line-height: 1.15;
+    letter-spacing: -1px; margin-bottom: 16px; font-weight: 800; }
+  .hero h1 em { font-style: normal; background: var(--gradient);
+    -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hero p { color: var(--text-dim); font-size: 15px; line-height: 1.7;
+    max-width: 480px; margin-bottom: 28px; }
+  .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; }
+  .hero-visual { position: relative; z-index: 2; display: flex; justify-content: center; gap: 16px; }
+  .hero-cover { width: 130px; height: 190px; border-radius: 14px;
+    background-size: cover; background-position: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    border: 2px solid rgba(255,255,255,0.1);
+    transition: transform .4s cubic-bezier(.2,.8,.2,1); }
+  .hero-cover:nth-child(1) { transform: rotate(-8deg) translateY(10px); }
+  .hero-cover:nth-child(2) { transform: scale(1.1); z-index: 2; }
+  .hero-cover:nth-child(3) { transform: rotate(8deg) translateY(10px); }
+  .hero-cover:hover { transform: translateY(-8px) scale(1.08); z-index: 5; }
+  @media (max-width: 900px) { .hero { grid-template-columns: 1fr; padding: 32px 6%; } .hero-visual { display: none; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo" onclick="location.href='index.html'">Manga<span>Verse</span></div>
+  <div class="nav-links">
+    <a href="index.html" class="active">Beranda</a>
+    <a href="genre.html">Genre</a>
+    <a href="bookmark.html">Bookmark</a>
+    <a href="profile.html">Profil</a>
+    <a href="admin.html">Admin</a>
+  </div>
+  <div class="search-box">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+      <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+    </svg>
+    <input type="text" id="searchInput" placeholder="Cari manga...">
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-content">
+    <div class="badge"><span class="dot"></span> TRENDING #1 MINGGU INI</div>
+    <h1>Petualangan <em>Tak Terbatas</em> di Dunia Manga</h1>
+    <p>Baca ribuan judul manga favoritmu dengan pengalaman membaca yang mulus, cepat, dan bebas gangguan. Update chapter baru setiap hari!</p>
+    <div class="hero-btns">
+      <a href="detail.html?id=one-piece" class="btn btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        Mulai Baca
+      </a>
+      <a href="genre.html" class="btn btn-ghost">Jelajahi Genre</a>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="hero-cover" id="hc1"></div>
+    <div class="hero-cover" id="hc2"></div>
+    <div class="hero-cover" id="hc3"></div>
+  </div>
+</div>
+
+<section>
+  <div class="section-head"><h2>🔥 Manga Populer</h2><a href="genre.html" class="see-all">Lihat Semua →</a></div>
+  <div class="grid" id="popularGrid"></div>
+</section>
+
+<section>
+  <div class="section-head"><h2>📖 Lanjut Baca</h2></div>
+  <div class="continue-list" id="continueList"></div>
+</section>
+
+<section>
+  <div class="section-head"><h2>🆕 Update Terbaru</h2><a href="genre.html" class="see-all">Lihat Semua →</a></div>
+  <div class="grid" id="latestGrid"></div>
+</section>
+
+<footer>
+  <div class="logo">Manga<span>Verse</span></div>
+  <p>© 2025 MangaVerse. Dibuat dengan ❤️ untuk para pecinta manga.</p>
+</footer>
+
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
